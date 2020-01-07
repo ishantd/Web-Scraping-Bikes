@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <span class="ng-binding">
+      <span class="currencySymbol ng-binding">₹​</span>282
+      <span
+        ng-hide="(bike.calculated.rentMin == bike.calculated.rentMax) || ($parent.search.bikes.available[bike.model.name].length  == 1) || ($parent.search.bikes.unavailable[bike.model.name].length == 1)"
+        class="ng-binding ng-hide"
+        ><span class="currencySymbol ng-binding"> - ₹​</span>282</span
+      >
+    </span>
+  </body>
+</html>

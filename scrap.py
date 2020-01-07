@@ -15,9 +15,10 @@ boongg_we = requests.get(
 )
 
 
-
-wsd_driver = webdriver.Firefox(executable_path=r'/home/ishant/ishant_linux/geckodriver-v0.26.0-linux64/geckodriver')
-wse_driver = webdriver.Firefox(executable_path=r'/home/ishant/ishant_linux/geckodriver-v0.26.0-linux64/geckodriver')
+wsd_driver = webdriver.Firefox(
+    executable_path=r'/home/ishant/ishant_linux/geckodriver-v0.26.0-linux64/geckodriver')
+wse_driver = webdriver.Firefox(
+    executable_path=r'/home/ishant/ishant_linux/geckodriver-v0.26.0-linux64/geckodriver')
 
 wsd_driver.get('https://www.wheelstreet.com/search/1578417852376550')
 wse_driver.get('https://www.wheelstreet.com/search/1578418067201136')
@@ -104,10 +105,15 @@ def wheelstreet_scrap(weekday, weekend):
     wd = BeautifulSoup(weekday)
     we = BeautifulSoup(weekend)
 
-    results = wd.find(class_="searchPage__resultMain")
+    results_wd = wd.find(class_="searchPage__resultMain")
     results_we = we.find(class_="searchPage__resultMain")
 
-    print(results)
+    bike_items_wd = results_wd.find_all(class_='searchPage__bikeCard ng-scope')
+    bike_items_we = results_we.find_all(class_='searchPage__bikeCard ng-scope')
+
+    bike_names = names('searchPage__bikeCardInfoName ng-binding',bike_items_wd)
+
+    print(bike_names)
 
 
 def gobikes_scrap(weekday, weekend):
@@ -116,14 +122,14 @@ def gobikes_scrap(weekday, weekend):
     # getting json object for weekday
     data_wd = pd.DataFrame(wd)
     Export = data_wd.to_json(
-        r'wheelstreet_wd.json')
-    with open('wheelstreet_wd.json') as f:
+        r'gobikes_wd.json')
+    with open('gobikes_wd.json') as f:
         weekday_data = json.load(f)
     # getting json object for weekend
     data_we = pd.DataFrame(we)
     Export = data_we.to_json(
-        r'wheelstreet_we.json')
-    with open('wheelstreet_we.json') as f:
+        r'gobikes_we.json')
+    with open('gobikes_we.json') as f:
         weekend_data = json.load(f)
 
     n = len(weekend_data["data"])
