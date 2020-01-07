@@ -3,6 +3,9 @@ import pandas as pd
 from pandas import DataFrame
 import requests
 from bs4 import BeautifulSoup
+# from requests_html import HTMLSession
+# session = HTMLSession()
+from selenium import webdriver
 
 boongg_wd = requests.get(
     'https://www.boongg.com/rent/search/pune/any/any/any?start_date=1578976200000&end_date=1579062600000&timezone=Asia/Calcutta'
@@ -11,13 +14,23 @@ boongg_we = requests.get(
     'https://www.boongg.com/rent/search/pune/any/any/any?start_date=1579321800000&end_date=1579408200000&timezone=Asia/Calcutta'
 )
 
-wheelstreet_wd = requests.get(
-    'https://www.wheelstreet.com/search/1578417852376550'
-)
 
-wheelstreet_we = requests.get(
-    'https://www.wheelstreet.com/search/1578418067201136'
-)
+
+wsd_driver = webdriver.Firefox(executable_path=r'/home/ishant/ishant_linux/geckodriver-v0.26.0-linux64/geckodriver')
+wse_driver = webdriver.Firefox(executable_path=r'/home/ishant/ishant_linux/geckodriver-v0.26.0-linux64/geckodriver')
+
+wsd_driver.get('https://www.wheelstreet.com/search/1578417852376550')
+wse_driver.get('https://www.wheelstreet.com/search/1578418067201136')
+
+html_wd = wsd_driver.page_source
+html_we = wse_driver.page_source
+
+# wheelstreet_wd = session.get('https://www.wheelstreet.com/search/1578417852376550')
+
+# wheelstreet_we = session.get('https://www.wheelstreet.com/search/1578418067201136')
+# wheelstreet_wd.html.render()
+# wheelstreet_we.html.render()
+
 
 gobikes_wd = requests.get(
     'https://api.gobikes.co.in/bikes?from-date=1578976200000&to-date=1579062600000&city=5'
@@ -88,10 +101,8 @@ def boongg_scrap(weekday, weekend):
 
 
 def wheelstreet_scrap(weekday, weekend):
-    wd = BeautifulSoup(weekday.content, 'html.parser')
-    we = BeautifulSoup(weekend.content, 'html.parser')
-
-    print(wd)
+    wd = BeautifulSoup(weekday)
+    we = BeautifulSoup(weekend)
 
     results = wd.find(class_="searchPage__resultMain")
     results_we = we.find(class_="searchPage__resultMain")
@@ -137,6 +148,6 @@ def gobikes_scrap(weekday, weekend):
     to_csv(df, "gobikes")
 
 
-gobikes_scrap(gobikes_wd, gobikes_we)
-# wheelstreet_scrap(wheelstreet_wd, wheelstreet_we)
+# gobikes_scrap(gobikes_wd, gobikes_we)
+wheelstreet_scrap(html_wd, html_we)
 # boongg_scrap(boongg_wd, boongg_we)
